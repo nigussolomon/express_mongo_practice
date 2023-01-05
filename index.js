@@ -24,6 +24,16 @@ const stds = mongoose.model(
   "Students"
 );
 
+app.get("/students/all", (req, res) => {
+  stds.find({ }, function (err, std) {
+    if (err) {
+      res.send({ Success: false, error: handleError(err) });
+    } else {
+      res.send({ Success: true, data: std });
+    }
+  });
+});
+
 app.get("/students", (req, res) => {
   const first_name = req.query.fname;
   stds.findOne({ first_name: first_name }, function (err, std) {
@@ -61,7 +71,11 @@ app.put("/students", (req, res) => {
       if (err) {
         res.send({ Success: false, error: handleError(err) });
       } else {
-        res.send({ Success: true, msg: std });
+				let message = "Updated Succesfully"
+				if (std.modifiedCount <= 0) {
+					message = "Nothing to update"
+				}
+        res.send({ Success: true, msg: message });
       }
     }
   );
@@ -69,11 +83,15 @@ app.put("/students", (req, res) => {
 
 app.delete("/students", (req, res) => {
   const id = req.query.id;
-  stds.remove({ _id: id }, function (err, std) {
+  stds.deleteOne({ _id: id }, function (err, std) {
     if (err) {
       res.send({ Success: false, error: handleError(err) });
     } else {
-      res.send({ Success: true, msg: std });
+			let message = "Deleted Succesfully"
+			if (std.deletedCount <= 0) {
+				message = "Nothing to delete"
+			}
+      res.send({ Success: true, msg: message });
     }
   });
 });
