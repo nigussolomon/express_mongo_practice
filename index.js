@@ -66,3 +66,14 @@ app.put("/students", (req, res) => {
     }
   );
 });
+
+app.delete("/students", (req, res) => {
+  const id = req.query.id;
+  stds.remove({ _id: id }, function (err, std) {
+    if (err) {
+      res.send({ Success: false, error: handleError(err) });
+    } else {
+      res.send({ Success: true, msg: std });
+    }
+  });
+});
