@@ -1,6 +1,6 @@
 module.exports = function (app, db) {
-  const model = require("../models/student")(db)
-  app.get("/students/all", (req, res) => {
+  const model = require("../models/student")(db);
+  app.get("/students", (req, res) => {
     model.find({}, function (err, std) {
       if (err) {
         res.send({ Success: false, error: handleError(err) });
@@ -10,7 +10,7 @@ module.exports = function (app, db) {
     });
   });
 
-  app.get("/students", (req, res) => {
+  app.get("/student", (req, res) => {
     const first_name = req.query.fname;
     model.findOne({ first_name: first_name }, function (err, std) {
       if (err) {
@@ -22,42 +22,31 @@ module.exports = function (app, db) {
   });
 
   app.post("/students/new", (req, res) => {
-    const first_name = req.body.fname;
-    const last_name = req.body.lname;
-    const section = req.body.sec;
-    model.create(
-      { first_name: first_name, last_name: last_name, section: section },
-      function (err, std) {
-        if (err) {
-          res.send({ Success: false, error: handleError(err) });
-        } else {
-          res.send({ Success: true, data: std });
-        }
+    model.create(req.body, function (err, std) {
+      if (err) {
+        res.send({ Success: false, error: handleError(err) });
+      } else {
+        res.send({ Success: true, data: std });
       }
-    );
+    });
   });
 
-  app.put("/students", (req, res) => {
-    const first_name = req.query.fname;
-    const last_name = req.body.lname;
-    model.update(
-      { first_name: first_name },
-      { $set: { last_name: last_name } },
-      function (err, std) {
-        if (err) {
-          res.send({ Success: false, error: handleError(err) });
-        } else {
-          let message = "Updated Succesfully";
-          if (std.modifiedCount <= 0) {
-            message = "Nothing to update";
-          }
-          res.send({ Success: true, msg: message });
+  app.put("/student", (req, res) => {
+    const id = req.query._id;
+    model.update({ _id: id }, { $set: req.body }, function (err, std) {
+      if (err) {
+        res.send({ Success: false, error: handleError(err) });
+      } else {
+        let message = "Updated Succesfully";
+        if (std.modifiedCount <= 0) {
+          message = "Nothing to update";
         }
+        res.send({ Success: true, msg: message });
       }
-    );
+    });
   });
 
-  app.delete("/students", (req, res) => {
+  app.delete("/student", (req, res) => {
     const id = req.query.id;
     model.deleteOne({ _id: id }, function (err, std) {
       if (err) {
