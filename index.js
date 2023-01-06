@@ -8,6 +8,11 @@ require("./db")(mongoose, config);
 require("./controllers/students")(app, mongoose);
 require("./controllers/courses")(app, mongoose);
 
+app.get("/", (req, res) =>{
+  res.send("WELCOME TO THE EXPRESS API")
+})
+
 app.listen(config.PORT, () =>
-  console.log("Server is running")
+  console.log("Server is running"),
+  console.log(`Open on your browser: http://localhost:${config.PORT}`)
 );
