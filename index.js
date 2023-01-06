@@ -6,8 +6,8 @@ app.use(express.urlencoded({ extended: true }));
 require('./config')(mongoose)
 require('./controllers/students')(app, mongoose)
 require('./controllers/courses')(app, mongoose)
+require('dotenv').config()
 
 
 
-
-app.listen(3000, () => console.log("Server is running"));
+app.listen(process.env.PORT, () => console.log("Server is running"));
