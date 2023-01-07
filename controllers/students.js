@@ -1,63 +1,23 @@
 module.exports = function (app, db) {
   const model = require("../models/student")(db);
+  const service = require("../services/db.services");
   app.get("/students", (req, res) => {
-    model.find({}, function (err, std) {
-      if (err) {
-        res.send({ Success: false, error: handleError(err) });
-      } else {
-        res.send({ Success: true, data: std });
-      }
-    });
+    service.getAll(model, res);
   });
 
   app.get("/student", (req, res) => {
-    const first_name = req.query.fname;
-    model.findOne({ first_name: first_name }, function (err, std) {
-      if (err) {
-        res.send({ Success: false, error: handleError(err) });
-      } else {
-        res.send({ Success: true, data: std });
-      }
-    });
+    service.getOne(model, res, { first_name: req.query.fname });
   });
 
   app.post("/students/new", (req, res) => {
-    model.create(req.body, function (err, std) {
-      if (err) {
-        res.send({ Success: false, error: handleError(err) });
-      } else {
-        res.send({ Success: true, data: std });
-      }
-    });
+    service.create(model, res, req.body);
   });
 
   app.put("/student", (req, res) => {
-    const id = req.query._id;
-    model.update({ _id: id }, { $set: req.body }, function (err, std) {
-      if (err) {
-        res.send({ Success: false, error: handleError(err) });
-      } else {
-        let message = "Updated Succesfully";
-        if (std.modifiedCount <= 0) {
-          message = "Nothing to update";
-        }
-        res.send({ Success: true, msg: message });
-      }
-    });
+    service.update(model, res, req);
   });
 
   app.delete("/student", (req, res) => {
-    const id = req.query.id;
-    model.deleteOne({ _id: id }, function (err, std) {
-      if (err) {
-        res.send({ Success: false, error: handleError(err) });
-      } else {
-        let message = "Deleted Succesfully";
-        if (std.deletedCount <= 0) {
-          message = "Nothing to delete";
-        }
-        res.send({ Success: true, msg: message });
-      }
-    });
+    service.deleteOne(model, res, req);
   });
 };
