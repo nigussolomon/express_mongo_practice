@@ -7,6 +7,7 @@ app.use(express.urlencoded({ extended: true }));
 require("./db")(mongoose, config);
 require("./controllers/students")(app, mongoose);
 require("./controllers/courses")(app, mongoose);
+require("./controllers/course_registrations")(app, mongoose);
 
 app.get("/", (req, res) =>{
   res.send("WELCOME TO THE EXPRESS API")
