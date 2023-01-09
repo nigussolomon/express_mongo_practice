@@ -1,6 +1,5 @@
-module.exports = function (app, db) {
+module.exports = function (app, db, service) {
   const model = require("../models/course_registration")(db);
-  const service = require("../services/db.services");
   app.get("/registrations", (req, res) => {
     service.getAll(model, res);
   });

@@ -5,9 +5,10 @@ const config = require("./config");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 require("./db")(mongoose, config);
-require("./controllers/students")(app, mongoose);
-require("./controllers/courses")(app, mongoose);
-require("./controllers/course_registrations")(app, mongoose);
+const service = require("./services/db.services");
+require("./controllers/students")(app, mongoose, service);
+require("./controllers/courses")(app, mongoose, service);
+require("./controllers/course_registrations")(app, mongoose, service);
 
 app.get("/", (req, res) =>{
   res.send("WELCOME TO THE EXPRESS API")

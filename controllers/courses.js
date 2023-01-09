@@ -1,12 +1,11 @@
-module.exports = function (app, db) {
+module.exports = function (app, db, service) {
   const model = require("../models/course")(db);
-  const service = require("../services/db.services");
   app.get("/courses", (req, res) => {
     service.getAll(model, res);
   });
 
   app.get("/course", (req, res) => {
-    service.getOne(model, res, { course_name: req.query.cname });
+    service.getOne(model, res, { _id: req.query._id });
   });
 
   app.post("/courses/new", (req, res) => {
